@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sinh Học 11 - Vườn Tri Thức Tươi Vui</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Mammoth.js for reading Word DOCX files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <!-- JS Confetti for celebrations -->
+    <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bioGreen: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        },
+                        bioYellow: '#fef08a',
+                        bioPink: '#fbcfe8',
+                        bioSky: '#bae6fd',
+                        bioPurple: '#e9d5ff'
+                    },
+                    fontFamily: {
+                        fredoka: ['Fredoka', 'sans-serif'],
+                        nunito: ['Nunito', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0fdf4;
+            background-image: radial-gradient(#bbf7d0 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+        }
+        .font-title {
+            font-family: 'Fredoka', cursive;
+        }
+        .cute-card {
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(34, 197, 94, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .cute-card:hover {
+            transform: translateY(-4px);
+        }
+        .btn-cute {
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .btn-cute:active {
+            transform: scale(0.95);
+        }
+        .floating-leaf {
+            animation: float 4s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #86efac;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4ade80;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-800">
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b-4 border-bioGreen-200 px-4 lg:px-8 py-3">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchRole('student')">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-bioGreen-400 to-emerald-300 flex items-center justify-center text-white text-2xl shadow-md floating-leaf">
+                    🌱
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold font-title text-bioGreen-700 tracking-wide flex items-center gap-2">
+                        Sinh Học 11 <span class="text-xs bg-bioGreen-100 text-bioGreen-700 px-2 py-0.5 rounded-full font-sans border border-bioGreen-300">Kết Nối Tri Thức</span>
+                    </h1>
+                    <p class="text-xs text-slate-500 font-semibold">Góc Học Tập Vui Tươi & Bổ Ích</p>
+                </div>
+            </div>
+
+            <!-- Header Controls & Role Switch -->
+            <div class="flex items-center space-x-3">
+                <!-- Audio Mini Player Widget -->
+                <div id="audioPlayerContainer" class="hidden md:flex items-center bg-bioGreen-50 border border-bioGreen-200 rounded-full px-3 py-1 text-xs gap-2 shadow-sm">
+                    <button id="bgmToggleBtn" onclick="toggleBGM()" class="w-7 h-7 rounded-full bg-bioGreen-500 text-white flex items-center justify-center hover:bg-bioGreen-600 transition">
+                        <i id="bgmIcon" class="fa-solid fa-music text-xs"></i>
+                    </button>
+                    <span id="bgmTrackTitle" class="text-slate-600 font-medium truncate max-w-[120px]">Nhạc nền</span>
+                    <input type="range" id="bgmVolume" min="0" max="1" step="0.1" value="0.5" onchange="setVolume(this.value)" class="w-12 accent-bioGreen-500 cursor-pointer">
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="bg-slate-100 p-1 rounded-2xl flex border border-slate-200">
+                    <button id="btnRoleStudent" onclick="switchRole('student')" class="px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 bg-bioGreen-500 text-white shadow-sm">
+                        <i class="fa-solid fa-graduation-cap"></i> Học Sinh
+                    </button>
+                    <button id="btnRoleTeacher" onclick="openTeacherAuthModal()" class="px-4 py-2 rounded-xl text-sm font-bold text-slate-600 hover:text-bioGreen-700 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-chalkboard-user"></i> Giáo Viên
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <audio id="bgmAudio" loop></audio>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-grow max-w-6xl w-full mx-auto p-4 md:p-6">
+
+        <!-- ==================== STUDENT VIEW ==================== -->
+        <section id="studentView" class="space-y-6">
+            <!-- Welcome Banner -->
+            <div class="cute-card bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 p-6 md:p-8 text-white relative overflow-hidden">
+                <div class="relative z-10 max-w-2xl">
+                    <span class="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider backdrop-blur-sm">
+                        Chào mừng bạn học sinh 🌿
+                    </span>
+                    <h2 class="text-2xl md:text-4xl font-bold font-title mt-2 mb-3">Chinh Phục Tri Thức Sinh Học 11 ✨</h2>
+                    <p class="text-white/90 text-sm md:text-base leading-relaxed font-medium">
+                        Bộ câu hỏi ôn tập 90+ câu chuẩn chương trình đã sẵn sàng! Luyện tập ngay để củng cố lý thuyết và rèn luyện kỹ năng làm bài thi.
+                    </p>
+                    <div class="mt-4 flex flex-wrap gap-3">
+                        <span class="bg-white/90 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-xl flex items-center gap-1 shadow-sm">
+                            <i class="fa-solid fa-check-double text-emerald-500"></i> Đề thi 90+ câu chính thức
+                        </span>
+                        <span class="bg-white/90 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-xl flex items-center gap-1 shadow-sm">
+                            <i class="fa-solid fa-music text-pink-500"></i> Nhạc nền thư giãn
+                        </span>
+                    </div>
+                </div>
+                <div class="absolute -right-6 -bottom-8 opacity-30 md:opacity-80 text-8xl md:text-9xl pointer-events-none select-none">
+                    🧪
+                </div>
+            </div>
+
+            <!-- Quiz Category Selection -->
+            <div id="quizSelectionScreen" class="space-y-6">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-bold font-title text-slate-800 flex items-center gap-2">
+                        <span>🎯</span> Chọn Hình Thức Luyện Tập
+                    </h3>
+                    <span id="currentDatasetBadge" class="text-xs bg-bioGreen-100 text-bioGreen-800 px-3 py-1 rounded-full font-bold border border-bioGreen-300">
+                        Đề hiện tại: <span id="activeTopicName">Bài Luyện Tập Mẫu</span>
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Multiple Choice Card -->
+                    <div onclick="startQuiz('mcq')" class="cute-card bg-white p-6 border-2 border-emerald-100 hover:border-emerald-400 cursor-pointer group">
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition duration-300">
+                            <i class="fa-solid fa-list-check"></i>
+                        </div>
+                        <h4 class="text-xl font-bold font-title text-slate-800 group-hover:text-emerald-600 transition">
+                            Trắc Nghiệm Nhiều Lựa Chọn
+                        </h4>
+                        <p class="text-slate-500 text-sm mt-2 leading-relaxed">
+                            Chọn 1 đáp án đúng duy nhất trong 4 phương án A, B, C, D. Phù hợp củng cố lý thuyết nhanh!
+                        </p>
+                        <div class="mt-5 flex items-center justify-between">
+                            <span id="mcqCountBadge" class="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-lg">
+                                0 Câu hỏi
+                            </span>
+                            <span class="text-emerald-500 font-bold text-sm group-hover:translate-x-1 transition flex items-center gap-1">
+                                Bắt đầu làm <i class="fa-solid fa-arrow-right"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- True / False Card -->
+                    <div onclick="startQuiz('tf')" class="cute-card bg-white p-6 border-2 border-sky-100 hover:border-sky-400 cursor-pointer group">
+                        <div class="w-14 h-14 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition duration-300">
+                            <i class="fa-solid fa-square-check"></i>
+                        </div>
+                        <h4 class="text-xl font-bold font-title text-slate-800 group-hover:text-sky-600 transition">
+                            Trắc Nghiệm Đúng / Sai
+                        </h4>
+                        <p class="text-slate-500 text-sm mt-2 leading-relaxed">
+                            Mỗi câu hỏi có 4 ý a, b, c, d. Xác định tính Đúng hoặc Sai của từng mệnh đề theo định dạng thi mới!
+                        </p>
+                        <div class="mt-5 flex items-center justify-between">
+                            <span id="tfCountBadge" class="text-xs font-bold text-sky-600 bg-sky-50 px-3 py-1 rounded-lg">
+                                0 Câu hỏi
+                            </span>
+                            <span class="text-sky-500 font-bold text-sm group-hover:translate-x-1 transition flex items-center gap-1">
+                                Bắt đầu làm <i class="fa-solid fa-arrow-right"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Quiz Screen -->
+            <div id="quizActiveScreen" class="hidden space-y-6">
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 flex flex-wrap justify-between items-center gap-4 shadow-sm">
+                    <button onclick="exitQuiz()" class="text-slate-500 hover:text-red-500 text-sm font-bold flex items-center gap-2 transition">
+                        <i class="fa-solid fa-arrow-left"></i> Thoát
+                    </button>
+
+                    <div class="flex items-center gap-3">
+                        <span id="quizTypeLabel" class="text-xs font-bold px-3 py-1 rounded-full bg-bioGreen-100 text-bioGreen-800">
+                            Nhiều lựa chọn
+                        </span>
+                        <span id="questionProgress" class="text-sm font-bold text-slate-700">
+                            Câu 1 / 10
+                        </span>
+                    </div>
+
+                    <button onclick="toggleBGM()" class="text-xs font-bold px-3 py-1.5 rounded-xl bg-pink-100 text-pink-700 hover:bg-pink-200 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-music"></i> <span id="quizBgmText">Bật/Tắt Nhạc Nền</span>
+                    </button>
+                </div>
+
+                <div class="cute-card bg-white p-6 md:p-8 border border-slate-100 relative">
+                    <div id="questionContainer" class="space-y-6">
+                        <!-- Dynamic Question Content Injected Here -->
+                    </div>
+
+                    <div class="mt-8 pt-6 border-t border-slate-100 flex justify-between items-center">
+                        <button id="btnPrevQuestion" onclick="navigateQuestion(-1)" class="px-5 py-2.5 rounded-xl bg-slate-100 text-slate-600 text-sm font-bold hover:bg-slate-200 transition disabled:opacity-40">
+                            <i class="fa-solid fa-chevron-left mr-1"></i> Câu trước
+                        </button>
+                        <button id="btnNextQuestion" onclick="navigateQuestion(1)" class="px-6 py-2.5 rounded-xl bg-bioGreen-500 text-white text-sm font-bold hover:bg-bioGreen-600 transition shadow-md btn-cute">
+                            Câu tiếp <i class="fa-solid fa-chevron-right ml-1"></i>
+                        </button>
+                        <button id="btnSubmitQuiz" onclick="submitQuiz()" class="hidden px-6 py-2.5 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 transition shadow-lg btn-cute">
+                            <i class="fa-solid fa-paper-plane mr-1"></i> Nộp Bài
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Result Screen -->
+            <div id="quizResultScreen" class="hidden space-y-6">
+                <div class="cute-card bg-white p-8 border border-slate-100 text-center space-y-6">
+                    <div class="w-24 h-24 mx-auto rounded-full bg-yellow-100 flex items-center justify-center text-5xl floating-leaf">
+                        🏆
+                    </div>
+                    <div>
+                        <h3 class="text-3xl font-bold font-title text-slate-800">Hoàn Thành Bài Tập!</h3>
+                        <p class="text-slate-500 text-sm mt-1">Bạn đã hoàn thành bài làm trắc nghiệm Sinh Học 11</p>
+                    </div>
+
+                    <div class="max-w-md mx-auto bg-slate-50 p-6 rounded-2xl border border-slate-200 grid grid-cols-2 gap-4">
+                        <div class="text-center">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Điểm số</span>
+                            <p id="resultScore" class="text-3xl font-bold font-title text-emerald-600 mt-1">0 / 10</p>
+                        </div>
+                        <div class="text-center">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Tỷ lệ đúng</span>
+                            <p id="resultPercentage" class="text-3xl font-bold font-title text-blue-600 mt-1">0%</p>
+                        </div>
+                    </div>
+
+                    <p id="resultFeedback" class="text-base font-semibold text-bioGreen-700 italic">
+                        "Tuyệt vời! Hãy tiếp tục duy trì phong độ học tập nhé!"
+                    </p>
+
+                    <div class="flex flex-wrap justify-center gap-4 pt-4">
+                        <button onclick="reviewAnswers()" class="px-6 py-3 rounded-xl bg-slate-100 text-slate-700 font-bold hover:bg-slate-200 transition text-sm">
+                            <i class="fa-solid fa-magnifying-glass mr-1"></i> Xem Lại Đáp Án
+                        </button>
+                        <button onclick="exitQuiz()" class="px-6 py-3 rounded-xl bg-bioGreen-500 text-white font-bold hover:bg-bioGreen-600 transition shadow-md text-sm btn-cute">
+                            <i class="fa-solid fa-rotate-right mr-1"></i> Làm Bài Khác
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Review Section -->
+                <div id="answerReviewContainer" class="hidden space-y-4">
+                    <h4 class="text-lg font-bold font-title text-slate-800">Chi Tiết Đáp Án:</h4>
+                    <div id="answerReviewList" class="space-y-4"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TEACHER VIEW ==================== -->
+        <section id="teacherView" class="hidden space-y-6">
+            <div class="bg-slate-800 text-white p-6 rounded-2xl shadow-md flex flex-wrap justify-between items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold font-title flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-bioGreen-400"></i> Quản Lý Học Liệu & Đề Thi
+                    </h2>
+                    <p class="text-xs text-slate-300 mt-1">
+                        Dành riêng cho Giáo viên Sinh học - Nhập đề từ Word & Quản lý nhạc nền
+                    </p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-3 py-1 rounded-full font-bold">
+                        <i class="fa-solid fa-lock text-xs mr-1"></i> Đã xác thực
+                    </span>
+                    <button onclick="switchRole('student')" class="px-3 py-1.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-xs font-bold transition">
+                        Đăng xuất
+                    </button>
+                </div>
+            </div>
+
+            <!-- Teacher Tabs Nav -->
+            <div class="flex border-b border-slate-200 space-x-2">
+                <button id="tabBtnUpload" onclick="switchTeacherTab('upload')" class="px-5 py-3 font-bold text-sm border-b-2 border-bioGreen-500 text-bioGreen-700 transition flex items-center gap-2">
+                    <i class="fa-solid fa-file-word"></i> Tải Đề Từ Word
+                </button>
+                <button id="tabBtnHistory" onclick="switchTeacherTab('history')" class="px-5 py-3 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition flex items-center gap-2">
+                    <i class="fa-solid fa-folder-open"></i> Kho Học Liệu (<span id="bankCount">0</span>)
+                </button>
+                <button id="tabBtnMusic" onclick="switchTeacherTab('music')" class="px-5 py-3 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition flex items-center gap-2">
+                    <i class="fa-solid fa-music"></i> Nhạc Nền Phát Bài
+                </button>
+            </div>
+
+            <!-- TAB 1: UPLOAD WORD & EDIT -->
+            <div id="teacherTabUpload" class="space-y-6">
+                <div class="bg-blue-50 border border-blue-200 rounded-2xl p-5 text-sm text-blue-900 space-y-2">
+                    <h4 class="font-bold flex items-center gap-2 text-blue-800">
+                        <i class="fa-solid fa-circle-info"></i> Quy tắc định dạng file Word (.docx) để phân tích tự động:
+                    </h4>
+                    <ul class="list-disc list-inside space-y-1 text-xs md:text-sm text-blue-800/90 pl-2">
+                        <li><b>Câu hỏi nhiều lựa chọn:</b> Bắt đầu bằng <code class="bg-blue-100 px-1 rounded">Câu 1:</code>, các đáp án <code class="bg-blue-100 px-1 rounded">A.</code>, <code class="bg-blue-100 px-1 rounded">B.</code>, <code class="bg-blue-100 px-1 rounded">C.</code>, <code class="bg-blue-100 px-1 rounded">D.</code>. <u>Gạch chân</u> dưới đáp án đúng.</li>
+                        <li><b>Câu hỏi Đúng/Sai:</b> Có tiêu đề <code class="bg-blue-100 px-1 rounded">Câu x: ... (Đúng/Sai)</code>, các ý <code class="bg-blue-100 px-1 rounded">a)</code>, <code class="bg-blue-100 px-1 rounded">b)</code>, <code class="bg-blue-100 px-1 rounded">c)</code>, <code class="bg-blue-100 px-1 rounded">d)</code>. Ý nào Đúng thì <u>gạch chân</u>.</li>
+                    </ul>
+                </div>
+
+                <div class="cute-card bg-white p-8 border-2 border-dashed border-bioGreen-300 rounded-2xl text-center space-y-4 hover:bg-bioGreen-50/50 transition">
+                    <div class="w-16 h-16 mx-auto rounded-full bg-bioGreen-100 text-bioGreen-600 flex items-center justify-center text-3xl">
+                        <i class="fa-solid fa-file-arrow-up"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-bold font-title text-slate-800">Kéo & Tải Tệp Word (.docx) Vào Đây</h4>
+                        <p class="text-xs text-slate-500 mt-1">Chấp nhận file Microsoft Word (.docx)</p>
+                    </div>
+                    <div class="flex justify-center items-center gap-3">
+                        <label class="px-6 py-2.5 rounded-xl bg-bioGreen-500 hover:bg-bioGreen-600 text-white font-bold text-sm cursor-pointer shadow-md transition btn-cute inline-block">
+                            <i class="fa-solid fa-folder-open mr-1"></i> Chọn File Từ Máy
+                            <input type="file" id="wordFileInput" accept=".docx" class="hidden" onchange="handleWordFileUpload(event)">
+                        </label>
+                        <button onclick="loadSampleBiologyQuiz()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">
+                            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Nạp Đề 90+ Câu Sinh 11
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 shadow-sm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Tên Bộ Đề / Bài Học Sinh Học 11</label>
+                            <input type="text" id="quizTitleInput" value="Bộ Đề 90+ Câu Hỏi Sinh Học 11" class="w-full px-4 py-2.5 border border-slate-300 rounded-xl font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-bioGreen-400">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Ghi chú / Chương học</label>
+                            <input type="text" id="quizNoteInput" value="Chương 1: Trao đổi chất và chuyển hóa năng lượng ở sinh vật" class="w-full px-4 py-2.5 border border-slate-300 rounded-xl font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-bioGreen-400">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-lg font-bold font-title text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-bioGreen-600"></i> Danh Sách Câu Hỏi Đã Phân Tích
+                            <span id="parsedCountBadge" class="text-xs bg-slate-200 text-slate-700 px-2.5 py-0.5 rounded-full font-bold">0 câu</span>
+                        </h4>
+                        <button onclick="saveCurrentQuizToBank()" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition btn-cute flex items-center gap-2">
+                            <i class="fa-solid fa-floppy-disk"></i> Lưu Đề & Cập Nhật Cho HS
+                        </button>
+                    </div>
+
+                    <div id="parsedQuestionsContainer" class="space-y-4">
+                        <div class="text-center py-12 bg-white rounded-2xl border border-slate-200 text-slate-400 text-sm">
+                            Chưa có câu hỏi nào. Hãy tải file Word hoặc bấm "Nạp Đề 90+ Câu Sinh 11".
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: QUESTION BANK & HISTORY -->
+            <div id="teacherTabHistory" class="hidden space-y-6">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4 shadow-sm">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h4 class="text-lg font-bold font-title text-slate-800">Kho Lịch Sử Đề Thi Sinh Học 11</h4>
+                            <p class="text-xs text-slate-500">Tất cả các bộ đề đã từng lưu. Bạn có thể chọn bất kỳ bộ đề nào làm đề chính cho HS.</p>
+                        </div>
+                    </div>
+
+                    <div id="historyBankContainer" class="space-y-3">
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: BACKGROUND MUSIC CONFIG -->
+            <div id="teacherTabMusic" class="hidden space-y-6">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 space-y-6 shadow-sm">
+                    <div>
+                        <h4 class="text-lg font-bold font-title text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-music text-pink-500"></i> Quản Lý Nhạc Nền Phát Trong Giờ Làm Bài
+                        </h4>
+                        <p class="text-xs text-slate-500 mt-1">
+                            Tải file nhạc nhẹ nhàng (.mp3, .wav) để tạo không khí làm bài thư giãn cho học sinh.
+                        </p>
+                    </div>
+
+                    <div class="p-6 border-2 border-dashed border-pink-200 rounded-2xl text-center space-y-3 bg-pink-50/30">
+                        <div class="w-12 h-12 mx-auto rounded-full bg-pink-100 text-pink-500 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-file-audio"></i>
+                        </div>
+                        <label class="px-5 py-2 rounded-xl bg-pink-500 hover:bg-pink-600 text-white font-bold text-sm cursor-pointer shadow-sm transition inline-block">
+                            <i class="fa-solid fa-upload mr-1"></i> Chọn File Âm Thanh MP3
+                            <input type="file" id="musicFileInput" accept="audio/*" class="hidden" onchange="handleMusicUpload(event)">
+                        </label>
+                        <p class="text-xs text-slate-400">Hỗ trợ MP3, WAV, OGG (Khuyên dùng dung lượng dưới 10MB)</p>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-pink-500 text-white flex items-center justify-center font-bold">
+                                🎵
+                            </div>
+                            <div>
+                                <h5 id="teacherBgmName" class="font-bold text-sm text-slate-800">Nhạc mặc định hệ thống</h5>
+                                <p id="teacherBgmStatus" class="text-xs text-emerald-600 font-semibold">Đã sẵn sàng</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <button onclick="previewTeacherBgm()" class="px-4 py-2 rounded-xl bg-white border border-slate-300 text-slate-700 font-bold text-xs hover:bg-slate-100 transition">
+                                <i class="fa-solid fa-play mr-1"></i> Nghe thử
+                            </button>
+                            <button onclick="removeCustomBgm()" class="px-3 py-2 rounded-xl bg-red-50 text-red-600 font-bold text-xs hover:bg-red-100 transition">
+                                Xóa nhạc
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- TEACHER AUTH MODAL -->
+    <div id="teacherAuthModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="cute-card bg-white max-w-md w-full p-6 space-y-5 border border-slate-100 shadow-2xl relative">
+            <button onclick="closeTeacherAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center space-y-2">
+                <div class="w-14 h-14 mx-auto rounded-2xl bg-bioGreen-100 text-bioGreen-700 flex items-center justify-center text-2xl font-bold">
+                    🔑
+                </div>
+                <h3 class="text-xl font-bold font-title text-slate-800">Xác Thực Giáo Viên</h3>
+                <p class="text-xs text-slate-500">Vui lòng nhập mật khẩu bảo mật để truy cập bảng quản lý đề thi</p>
+            </div>
+
+            <form onsubmit="handleTeacherLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Mật khẩu giáo viên</label>
+                    <input type="password" id="teacherPassInput" placeholder="Nhập mật khẩu..." class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-bioGreen-400 text-center text-lg tracking-widest font-bold">
+                    <p id="authErrorMsg" class="text-xs text-red-500 mt-1 font-semibold hidden text-center">
+                        Mật khẩu không chính xác! Vui lòng thử lại.
+                    </p>
+                </div>
+
+                <button type="submit" class="w-full py-3 rounded-xl bg-bioGreen-500 hover:bg-bioGreen-600 text-white font-bold transition shadow-md btn-cute">
+                    Đăng Nhập Quản Lý
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 text-white px-5 py-3 rounded-xl shadow-xl text-sm font-semibold transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
+        <span id="toastIcon">✅</span>
+        <span id="toastMessage">Thông báo</span>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200 py-4 px-6 text-center text-xs text-slate-500">
+        <p>© 2026 Trang Web Học Tập Sinh Học 11 - Thiết kế cho Giáo Viên & Học Sinh THPT</p>
+    </footer>
+
+    <script>
+        /* GLOBAL STATE & CONSTANTS */
+        const TEACHER_PASSWORD = "020703";
+        const STORAGE_KEY_CURRENT_QUIZ = "bio11_current_quiz_v2";
+        const STORAGE_KEY_HISTORY = "bio11_quiz_history_v2";
+        const STORAGE_KEY_BGM = "bio11_bgm_audio";
+
+        // Full 90+ Question Dataset analyzed from provided document
+        const sampleQuizData = {
+            id: "full_doc_90_v1",
+            title: "Bộ Đề 90+ Câu Hỏi Ôn Tập Sinh Học 11",
+            note: "Chương 1: Trao đổi chất & chuyển hóa năng lượng ở sinh vật",
+            updatedAt: new Date().toLocaleString("vi-VN"),
+            mcqQuestions: [
+                {
+                    id: 1,
+                    type: "mcq",
+                    question: "Mọi cơ thể sống đều không ngừng trao đổi chất và chuyển hóa năng lượng với môi trường, khi quá trình này dừng lại thì:",
+                    options: ["Sinh vật sẽ sinh trưởng.", "Sinh vật sẽ phát triển.", "Sinh vật sẽ chết.", "Sinh vật sẽ vận động và sinh sản."],
+                    correctIndex: 2
+                },
+                {
+                    id: 2,
+                    type: "mcq",
+                    question: "Nguồn năng lượng khởi đầu của sự sống trên Trái Đất là",
+                    options: ["Năng lượng ánh sáng mặt trời", "Hóa năng", "Điện năng", "Năng lượng phóng xạ"],
+                    correctIndex: 0
+                },
+                {
+                    id: 3,
+                    type: "mcq",
+                    question: "Sinh vật tự dưỡng là sinh vật có khả năng",
+                    options: ["tự tổng hợp chất hữu cơ từ các chất vô cơ.", "phân giải xác sinh vật khác để lấy chất hữu cơ.", "tự tổng hợp chất hữu cơ từ các chất hữu cơ có sẵn.", "tự tổng hợp các chất vô cơ từ các chất vô cơ có sẵn."],
+                    correctIndex: 0
+                },
+                {
+                    id: 4,
+                    type: "mcq",
+                    question: "Sinh vật dị dưỡng là sinh vật",
+                    options: [
+                        "tự tổng hợp chất hữu cơ từ các chất vô cơ nhờ năng lượng hấp thụ từ ánh sáng mặt trời.",
+                        "tự tổng hợp chất hữu cơ từ các chất vô cơ nhờ năng lượng từ việc phân giải các chất hóa học.",
+                        "lấy chất hữu cơ trực tiếp từ các sinh vật khác hoàn toàn nhờ năng lượng ánh sáng mặt trời.",
+                        "lấy chất hữu cơ trực tiếp từ các sinh vật tự dưỡng hoặc từ các sinh vật dị dưỡng khác."
+                    ],
+                    correctIndex: 3
+                },
+                {
+                    id: 5,
+                    type: "mcq",
+                    question: "Sinh vật tự dưỡng trên cạn điển hình là",
+                    options: ["nấm", "thực vật.", "động vật.", "tảo."],
+                    correctIndex: 1
+                },
+                {
+                    id: 6,
+                    type: "mcq",
+                    question: "Năng lượng khởi đầu cung cấp cho sinh giới bắt nguồn từ nguồn năng lượng nào dưới đây?",
+                    options: ["năng lượng ánh sáng mặt trời.", "năng lượng gió, năng lượng sóng.", "năng lượng nhiệt từ mặt trời.", "năng lượng trong các chất hóa học."],
+                    correctIndex: 0
+                },
+                {
+                    id: 7,
+                    type: "mcq",
+                    question: "Bản chất của giai đoạn tổng hợp là quá trình",
+                    options: ["đồng hóa.", "dị hóa.", "tiêu hóa.", "tuần hoàn."],
+                    correctIndex: 0
+                },
+                {
+                    id: 8,
+                    type: "mcq",
+                    question: "Quá trình biến đổi năng lượng ánh sáng mặt trời thành năng lượng hóa học trong các chất hữu cơ sẽ đi kèm với sự",
+                    options: ["giải phóng năng lượng.", "tích lũy năng lượng.", "tạo ra năng lượng.", "phân giải năng lượng."],
+                    correctIndex: 1
+                },
+                {
+                    id: 9,
+                    type: "mcq",
+                    question: "Bản chất của giai đoạn phân giải là",
+                    options: ["đồng hóa.", "dị hóa.", "tiêu hóa.", "tuần hoàn."],
+                    correctIndex: 1
+                },
+                {
+                    id: 10,
+                    type: "mcq",
+                    question: "Sự phân giải các chất hóa học ở giai đoạn phân giải sẽ đi kèm với sự",
+                    options: ["giải phóng năng lượng.", "tích lũy năng lượng.", "tạo ra năng lượng.", "phân bố năng lượng."],
+                    correctIndex: 0
+                },
+                {
+                    id: 11,
+                    type: "mcq",
+                    question: "Năng lượng mà các sinh vật sử dụng trong hầu hết các hoạt động sống là",
+                    options: ["ADP.", "ATP.", "AMP.", "NADPH."],
+                    correctIndex: 1
+                },
+                {
+                    id: 12,
+                    type: "mcq",
+                    question: "Phát biểu nào dưới đây không đúng khi nói về vai trò của nước?",
+                    options: [
+                        "Nước chiếm một phần rất lớn trong sinh khối tươi của thực vật",
+                        "Nước quyết định sự phân bố của thực vật trên Trái Đất",
+                        "Thành phần quan trọng của tế bào, tạo môi trường liên kết các cơ quan với nhau",
+                        "Nước là thành phần màng tế bào, hoạt hóa enzyme và truyền tín hiệu"
+                    ],
+                    correctIndex: 3
+                },
+                {
+                    id: 13,
+                    type: "mcq",
+                    question: "Trong các phát biểu sau về vai trò của nước, có bao nhiêu phát biểu đúng?\n(1) Là thành phần cấu tạo của tế bào.\n(2) Là dung môi hòa tan các chất, tham gia vào quá trình vận chuyển vật chất trong cây.\n(3) Điều hòa nhiệt độ của cơ thể thực vật.\n(4) Là nguyên liệu, môi trường của các phản ứng sinh hóa.",
+                    options: ["1.", "2.", "3.", "4."],
+                    correctIndex: 3
+                },
+                {
+                    id: 14,
+                    type: "mcq",
+                    question: "Nguyên tố dinh dưỡng khoáng thiết yếu trong cây là nguyên tố…",
+                    options: [
+                        "thiếu nó cây không hoàn thành được chu trình sống.",
+                        "có thể thay thế bởi một nguyên tố khác khi cây cần sử dụng.",
+                        "tham gia gián tiếp vào quá trình chuyển hóa vật chất.",
+                        "chiếm hàm lượng lớn hơn các nguyên tố khác trong cơ thể"
+                    ],
+                    correctIndex: 0
+                },
+                {
+                    id: 15,
+                    type: "mcq",
+                    question: "Ở thực vật, nguyên tố nào sau đây là thành phần của diệp lục, hoạt hóa enzyme liên quan đến sự vận chuyển gốc phosphate?",
+                    options: ["Calcium", "Nitrogen.", "Magnesium.", "Potassium."],
+                    correctIndex: 2
+                },
+                {
+                    id: 16,
+                    type: "mcq",
+                    question: "Phát biểu nào sau đây là đúng về vai trò của Magnesium (Mg) đối với thực vật?",
+                    options: [
+                        "Thành phần của thành tế bào, hoạt hóa enzyme thủy phân ATP và phospholipid.",
+                        "Thành phần của diệp lục, tham gia hoạt hóa enzyme liên quan đến sự vận chuyển gốc phosphate.",
+                        "Thành phần của nucleic acid, phospholipid, ATP và một số coenzyme.",
+                        "Thành phần của cytochrome, hoạt hóa enzyme của quá trình tổng hợp diệp lục."
+                    ],
+                    correctIndex: 1
+                },
+                {
+                    id: 17,
+                    type: "mcq",
+                    question: "Phát biểu nào sau đây là đúng về vai trò của Phosphorus (P) đối với thực vật?",
+                    options: [
+                        "Thành phần của thành tế bào, hoạt hóa enzyme thủy phân ATP và phospholipid.",
+                        "Thành phần của diệp lục, tham gia hoạt hóa enzyme liên quan đến sự vận chuyển gốc phosphate.",
+                        "Thành phần của nucleic acid, phospholipid, ATP và một số coenzyme.",
+                        "Thành phần của cytochrome, hoạt hóa enzyme của quá trình tổng hợp diệp lục."
+                    ],
+                    correctIndex: 2
+                },
+                {
+                    id: 18,
+                    type: "mcq",
+                    question: "Phát biểu nào sau đây là sai khi nói về nguyên tố khoáng?",
+                    options: [
+                        "Trong thành phần cấu tạo của thực vật có hơn 50 nguyên tố, nhưng chỉ có khoảng 17 nguyên tố được xem là thiết yếu đối với cây.",
+                        "Khi thiếu nguyên tố khoáng thiết yếu, cây vẫn hoàn thành được chu kì sống của mình.",
+                        "Có hai loại nguyên tố khoáng là nguyên tố đa lượng và nguyên tố vi lượng.",
+                        "Nguyên tố khoáng có 2 vai trò chính là cấu trúc nên các thành phần của tế bào và điều tiết quá trình sinh lí."
+                    ],
+                    correctIndex: 1
+                },
+                {
+                    id: 19,
+                    type: "mcq",
+                    question: "Quá trình trao đổi nước và khoáng ở thực vật diễn ra theo thứ tự nào sau đây?",
+                    options: [
+                        "Hấp thụ nước ở rễ -> thoát hơi nước ở lá -> vận chuyển nước ở thân.",
+                        "Hấp thụ nước ở rễ -> vận chuyển nước ở thân -> thoát hơi nước ở lá.",
+                        "Vận chuyển nước ở thân -> thoát hơi nước ở lá -> hấp thụ nước ở rễ.",
+                        "Vận chuyển nước ở thân -> hấp thụ nước ở rễ -> thoát hơi nước ở lá."
+                    ],
+                    correctIndex: 1
+                },
+                {
+                    id: 20,
+                    type: "mcq",
+                    question: "Các nguyên tố khoáng được cây hấp thụ dưới dạng:",
+                    options: ["hợp chất.", "đơn chất.", "chất kết tủa.", "ion hòa tan."],
+                    correctIndex: 3
+                },
+                {
+                    id: 21,
+                    type: "mcq",
+                    question: "Vì sao trao đổi khoáng đi kèm với trao đổi nước?",
+                    options: [
+                        "các nguyên tố khoáng không tan trong nước.",
+                        "các nguyên tố khoáng liên kết với nước.",
+                        "các nguyên tố khoáng hòa tan trong nước.",
+                        "các nguyên tố khoáng có chứa nước."
+                    ],
+                    correctIndex: 2
+                },
+                {
+                    id: 22,
+                    type: "mcq",
+                    question: "Thực vật trên cạn, nước và khoáng từ đất được hấp thụ nhờ:",
+                    options: ["tế bào biểu bì của toàn bộ cây.", "tế bào mạch gỗ ở rễ.", "tế bào mạch rây ở rễ", "lông hút ở rễ."],
+                    correctIndex: 3
+                },
+                {
+                    id: 23,
+                    type: "mcq",
+                    question: "Rễ cây hấp thụ nước từ đất vào tế bào lông hút theo cơ chế",
+                    options: ["nhập bào", "chủ động", "thẩm tách", "thẩm thấu"],
+                    correctIndex: 3
+                },
+                {
+                    id: 24,
+                    type: "mcq",
+                    question: "Vì sao rễ hấp thụ được nước từ trong đất?",
+                    options: [
+                        "Do dịch tế bào lông hút của rễ không có chất tan.",
+                        "Do dịch tế bào lông hút của rễ có nồng độ chất tan thấp hơn so với dịch trong đất.",
+                        "Do dịch tế bào lông hút của rễ có nồng độ chất tan bằng so với dịch trong đất.",
+                        "Do dịch tế bào lông hút của rễ có nồng độ chất tan cao hơn so với dịch trong đất."
+                    ],
+                    correctIndex: 3
+                },
+                {
+                    id: 25,
+                    type: "mcq",
+                    question: "Nguyên nhân nào sau đây làm tế bào lông hút luôn ưu trương so với dung dịch đất?\n(1) Rễ hấp thụ các ion khoáng từ đất và tích lũy các chất tan từ quá trình chuyển hóa vật chất.\n(2) Thoát hơi nước ở lá làm giảm lượng nước ở tế bào lông hút.\n(3) Rễ hấp thụ nước và tích lũy nước từ quá trình chuyển hóa vật chất.\n(4) Rễ tiết các chất làm phân giải các chất tan trong dung dịch đất.",
+                    options: ["1, 2.", "1, 3", "1, 4", "2, 3"],
+                    correctIndex: 0
+                },
+                {
+                    id: 26,
+                    type: "mcq",
+                    question: "Do sự biến đổi khí hậu dẫn đến hiện tượng nước biển xâm nhập vào đất liền. Sự tích tụ muối trong đất là một trở ngại lớn trong nông nghiệp. Nguyên nhân nào làm cho cây trồng không ưa mặn không sống được trong đất có nồng độ muối cao?",
+                    options: [
+                        "Hàm lượng nước trong đất là quá thấp.",
+                        "Nồng độ chất tan trong đất quá cao.",
+                        "Hàm lượng oxygen trong đất thấp là lông hút bị chết.",
+                        "Hàm lượng ion khoáng đầu độc tế bào."
+                    ],
+                    correctIndex: 1
+                },
+                {
+                    id: 27,
+                    type: "mcq",
+                    question: "Ở miền Bắc nước ta, về mùa đông khi nhiệt độ hạ thấp đến mức rét hại thì mạ xuân (lúa non) thường bị chết rét. Nguyên nhân chủ yếu là vì:",
+                    options: [
+                        "Nhiệt độ thấp làm mạ tăng sinh chống rét, khiến nguôn dinh dưỡng bị cạn kiệt.",
+                        "Nhiệt độ thấp làm tổn thương rễ, cây không hấp thụ được nước, cây héo chết.",
+                        "Nhiệt độ thấp làm hệ sinh vật gây hại phát triển, làm cây chết.",
+                        "Nhiệt độ thấp làm cây không quang hợp được, cây chết."
+                    ],
+                    correctIndex: 1
+                },
+                {
+                    id: 28,
+                    type: "mcq",
+                    question: "Hai con đường vận chuyển nước và khoáng từ lông hút vào mạch gỗ của rễ là:",
+                    options: [
+                        "con đường gian bào và con đường biểu bì.",
+                        "con đường mạch gỗ và con đường mạch rây.",
+                        "con đường tế bào chất và con đường biểu bì.",
+                        "con đường gian bào và con đường tế bào chất."
+                    ],
+                    correctIndex: 3
+                },
+                {
+                    id: 29,
+                    type: "mcq",
+                    question: "Trước khi đi vào mạch gỗ của rễ, nước và các chất khoáng phải đi qua cấu trúc nào sau đây?",
+                    options: ["Tế bào nội bì", "Tế bào nhu mô vỏ", "Đai Caspari", "Khí khổng"],
+                    correctIndex: 0
+                },
+                {
+                    id: 30,
+                    type: "mcq",
+                    question: "Nước đi vào mạch gỗ theo con đường gian bào đến nội bì thì chuyển sang con đường tế bào chất nguyên nhân do:",
+                    options: [
+                        "Tế bào nội bì có đai caspary thấm nước nên nước vận chuyển qua được.",
+                        "Tế bào nội bì không thấm nước nên không vận chuyển qua được.",
+                        "Tế bào nội bì có đai caspary không thấm nước nên nước không thấm qua được.",
+                        "Áp suất thẩm thấu của tế bào nội bì thấp nên nước phải di chuyển sang con đường khác."
+                    ],
+                    correctIndex: 2
+                },
+                {
+                    id: 31,
+                    type: "mcq",
+                    question: "Vai trò của đai caspari là:",
+                    options: [
+                        "Vận chuyển nước và muối khoáng",
+                        "Kiểm soát lượng nước và chất khoáng hấp thụ",
+                        "Phân chia dòng nước và ion khoáng",
+                        "Hấp thụ trực tiếp ion khoáng"
+                    ],
+                    correctIndex: 1
+                },
+                {
+                    id: 32,
+                    type: "mcq",
+                    question: "Thành phần chủ yếu của dịch mạch rây là",
+                    options: ["Các chất hữu cơ được tổng hợp ở lá.", "Các chất hữu cơ được tổng hợp ở thân.", "Các chất hữu cơ được tổng hợp ở rễ.", "Các chất vô cơ được tổng hợp ở lá."],
+                    correctIndex: 0
+                },
+                {
+                    id: 33,
+                    type: "mcq",
+                    question: "Chất hữu cơ chủ yếu được vận chuyển chủ yếu trong hệ mạch rây là",
+                    options: ["Fructose.", "Glucose.", "Sucrose.", "Ion khoáng."],
+                    correctIndex: 2
+                },
+                {
+                    id: 34,
+                    type: "mcq",
+                    question: "Thành phần chủ yếu của dịch mạch gỗ là",
+                    options: ["nước và các ion khoáng.", "nước và các chất hữu cơ.", "các ion khoáng.", "các hợp chất hữu cơ."],
+                    correctIndex: 0
+                },
+                {
+                    id: 35,
+                    type: "mcq",
+                    question: "Động lực của dòng mạch rây là",
+                    options: ["Lực đẩy do áp suất rễ.", "Lực hút do thoát hơi nước ở lá.", "Sự chênh lệch áp suất thẩm thấu.", "Trọng lực hút nước từ lá xuống rễ."],
+                    correctIndex: 2
+                },
+                {
+                    id: 36,
+                    type: "mcq",
+                    question: "Ở một số loại cây thân gỗ lớn, lực đóng vai trò chủ yếu giúp vận chuyển nước và chất khoáng từ rễ lên lá là?",
+                    options: ["Lực đẩy do áp suất rễ.", "Sự chênh lệch áp gradient nồng độ.", "Lực kéo do thoát hơi nước ở lá.", "Lực liên kết giữa các phân tử nước."],
+                    correctIndex: 2
+                },
+                {
+                    id: 37,
+                    type: "mcq",
+                    question: "Vai trò của thoát hơi nước đối với dòng mạch gỗ là",
+                    options: [
+                        "tạo lực đẩy đầu dưới của dòng mạch gỗ.",
+                        "tạo lực hút đầu trên của dòng mạch gỗ.",
+                        "tạo lực liên kết giữa các phân tử nước với nhau.",
+                        "tạo lực liên kết giữa nước và thành mạch gỗ."
+                    ],
+                    correctIndex: 1
+                },
+                {
+                    id: 38,
+                    type: "mcq",
+                    question: "Khi nói về quá trình vận chuyển các chất trong cây, phát biểu nào sau đây là đúng?",
+                    options: [
+                        "Vận chuyển trong mạch gỗ là chủ động, còn mạch rây là bị động.",
+                        "Dòng mạch gỗ vận chuyển các chất vô cơ, dòng mạch rây vận chuyển các chất hữu cơ.",
+                        "Mạch gỗ vận chuyển glucose, mạch rây vận chuyển các chất hữu cơ khác.",
+                        "Mạch gỗ vận chuyển các chất từ rễ lên lá, mạch rây từ lá xuống rễ."
+                    ],
+                    correctIndex: 1
+                },
+                {
+                    id: 39,
+                    type: "mcq",
+                    question: "Cơ quan thoát hơi nước chủ yếu ở cây trên cạn là",
+                    options: ["rễ.", "thân.", "lá.", "cành."],
+                    correctIndex: 2
+                },
+                {
+                    id: 40,
+                    type: "mcq",
+                    question: "Thoát hơi nước qua lá qua những con đường nào?",
+                    options: [
+                        "Qua khí khổng là chủ yếu và qua bề mặt lá là thứ yếu",
+                        "Qua khí khổng là thứ yếu và qua bề mặt lá là chủ yếu",
+                        "Qua lớp biểu bì là chủ yếu và qua lông hút là thứ yếu",
+                        "Qua mạch gỗ là chủ yếu và qua mạch rây là thứ yếu"
+                    ],
+                    correctIndex: 0
+                },
+                {
+                    id: 41,
+                    type: "mcq",
+                    question: "Ở lá trưởng thành, việc thoát hơi nước qua bề mặt lá diễn ra chậm vì:",
+                    options: ["có tầng cutin dày.", "có tầng cutin mỏng", "có thành tế bào dày", "có ít khí khổng"],
+                    correctIndex: 0
+                },
+                {
+                    id: 42,
+                    type: "mcq",
+                    question: "Khí khổng được cấu tạo từ khe hở của",
+                    options: ["4 tế bào mô giậu.", "2 tế bào hình hạt đậu", "2 tế bào mô giậu", "4 tế bào hình hạt đậu"],
+                    correctIndex: 1
+                },
+                {
+                    id: 43,
+                    type: "mcq",
+                    question: "Sự trương nước hay mất nước của tế bào khí khổng chủ yếu phụ thuộc vào yếu tố nào sau đây?",
+                    options: ["Ánh sáng, nhiệt độ.", "Nhiệt độ, lượng nước.", "Ánh sáng, stress.", "Ánh sáng, pH."],
+                    correctIndex: 1
+                },
+                {
+                    id: 44,
+                    type: "mcq",
+                    question: "Thực vật bị stress trong điều kiện nào?",
+                    options: ["Có rất ít cây xung quanh.", "Có nhiều động vật sống trên cây.", "Nóng, khô hạn, độ mặn cao.", "Thời tiết quá lạnh"],
+                    correctIndex: 2
+                },
+                {
+                    id: 45,
+                    type: "mcq",
+                    question: "Cường độ thoát hơi nước qua lá được điều chỉnh chủ yếu bởi cơ chế",
+                    options: ["đóng mở của khí khổng.", "khuếch tán hơi nước qua cutin.", "cân bằng nước của khí khổng.", "khuếch tán hơi nước ở bề mặt lá."],
+                    correctIndex: 0
+                },
+                {
+                    id: 46,
+                    type: "mcq",
+                    question: "Ion khoáng có vai trò chủ đạo trong việc đóng mở khí khổng là",
+                    options: ["K+", "Mg2+.", "Fe2+", "Na+"],
+                    correctIndex: 0
+                },
+                {
+                    id: 47,
+                    type: "mcq",
+                    question: "Khi xét về ảnh hưởng của độ ẩm không khí đến sự thoát hơi nước, điều nào sau đây đúng?",
+                    options: [
+                        "Độ ẩm không khí càng cao, sự thoát hơi nước càng yếu.",
+                        "Độ ẩm không khí càng thấp, sự thoát hơi nước càng yếu.",
+                        "Độ ẩm không khí càng thấp, sự thoát hơi nước càng mạnh.",
+                        "Độ ẩm không khí càng cao, sự thoát hơi nước càng mạnh."
+                    ],
+                    correctIndex: 0
+                },
+                {
+                    id: 48,
+                    type: "mcq",
+                    question: "Gọi A là lượng nước do rễ hút vào, B là lượng nước thoát ra. Nếu khi A nhỏ hơn B thì",
+                    options: ["cây bị thiếu nước, lá cây bị héo.", "cây đủ nước, phát triển bình thường.", "cây dư nước, phát triển bình thường.", "cây thiếu nước, phát triển bình thường."],
+                    correctIndex: 0
+                },
+                {
+                    id: 49,
+                    type: "mcq",
+                    question: "Phản ứng nào sau đây không phải là phản ứng của thực vật để chống chịu với điều kiện bất lợi gây ra trạng thái mất cân bằng nước?",
+                    options: ["Lá biến thành gai.", "Lá có lớp lông phủ trên bề mặt.", "Khí khổng nằm sâu dưới biểu bì lá.", "Tăng số khí khổng trên bề mặt lá."],
+                    correctIndex: 3
+                },
+                {
+                    id: 50,
+                    type: "mcq",
+                    question: "Khi vận chuyển một cây gỗ lớn đi trồng ở nơi khác, người ta cắt bớt lá nhằm mục đích gì ?",
+                    options: ["Giảm bớt khối lượng cho dễ vận chuyển.", "Hạn chế vướng víu khi vận chuyển.", "Hạn chế bộ lá bị hỏng khi vận chuyển.", "Giảm tối đa lượng nước thoát ra."],
+                    correctIndex: 3
+                },
+                {
+                    id: 51,
+                    type: "mcq",
+                    question: "Thực vật hấp thụ nitrogen dưới dạng nào sau đây?",
+                    options: ["N2 và NO2.", "NH4+ và NO3-", "Nitrogen hữu cơ.", "NH4+ và NO"],
+                    correctIndex: 1
+                },
+                {
+                    id: 52,
+                    type: "mcq",
+                    question: "Yếu tố vật lí nào có thể chuyển nitrogen trong tự nhiên thành dạng nitrogen cây hấp thụ được?",
+                    options: ["Ánh sáng mạnh.", "Nhiệt độ cao.", "Độ pH thấp.", "Sấm sét."],
+                    correctIndex: 3
+                },
+                {
+                    id: 53,
+                    type: "mcq",
+                    question: "Vì sao người ta hay trồng xen canh cây họ Đậu với cây trồng khác để tăng năng suất?",
+                    options: [
+                        "Cây họ Đậu có khả năng cung cấp dinh dưỡng cho các cây khác.",
+                        "Cây họ Đậu có các vi khuẩn nốt sần giúp cố định nitrogen cung cấp cho cây.",
+                        "Cây họ Đậu có khả năng tiết ra các chất xua đuổi côn trùng, sâu bọ.",
+                        "Cây họ Đậu có khả năng tiết ra các chất kích thích tăng trưởng."
+                    ],
+                    correctIndex: 1
+                },
+                {
+                    id: 54,
+                    type: "mcq",
+                    question: "Trong sản xuất, người ta thường ủ ấm gốc cây bằng rơm rạ vào mùa lạnh. Mục đích của việc làm này là gì?",
+                    options: [
+                        "hạn chế ảnh hưởng của nhiệt độ cao đến khả năng hút nước và chất khoáng của hệ rễ.",
+                        "hạn chế ảnh hưởng của nhiệt độ thấp đến khả năng hút nước và chất khoáng của hệ rễ.",
+                        "hạn chế ảnh hưởng của lượng nước đến khả năng hút khoáng của rễ.",
+                        "hạn chế ảnh hưởng của lượng khoáng đến khả năng hút nước của rễ."
+                    ],
+                    correctIndex: 1
+                },
+                {
+                    id: 55,
+                    type: "mcq",
+                    question: "Khi bón phân quá nhiều thì lá cây thường bị héo do nguyên nhân nào sau đây?",
+                    options: [
+                        "bón nhiều làm đất nghèo dinh dưỡng.",
+                        "bón nhiều làm cây no dinh dưỡng, dẫn đến cây chết",
+                        "bón nhiều làm lá to, khiến tốc độ thoát hơi nước tăng làm lá héo.",
+                        "nồng độ chất tan trong đất tăng, cản trở sự hấp thụ nước của cây."
+                    ],
+                    correctIndex: 3
+                },
+                {
+                    id: 56,
+                    type: "mcq",
+                    question: "Tên gọi thực vật C3 bắt nguồn từ đâu?",
+                    options: ["số lượng lục lạp trong tế bào lá", "chất nhận CO2 đầu tiên.", "sản phẩm cố định CO2 đầu tiên", "enzyme cố định CO2"],
+                    correctIndex: 2
+                },
+                {
+                    id: 57,
+                    type: "mcq",
+                    question: "Nhóm thực vật nào sau đây là cây C4?",
+                    options: ["Xương rồng, thanh long, dứa.", "Mía, ngô, rau dền.", "Mía, thanh long, ngô.", "Lúa, khoai, sắn."],
+                    correctIndex: 1
+                },
+                {
+                    id: 58,
+                    type: "mcq",
+                    question: "Nhóm thực vật nào sau đây là cây C3?",
+                    options: ["Xương rồng, thanh long, dứa.", "Mía, ngô, rau dền.", "Mía, thanh long, ngô.", "Lúa, khoai, sắn."],
+                    correctIndex: 3
+                },
+                {
+                    id: 59,
+                    type: "mcq",
+                    question: "Khác với thực vật C3, vì không có hô hấp sáng nên thực vật C4 có thể sống ở điều kiện",
+                    options: [
+                        "cường độ ánh sáng mạnh, nhiệt độ cao, nồng độ CO2 cao, O2 thấp.",
+                        "cường độ ánh sáng mạnh, nhiệt độ cao, nồng độ CO2 thấp, O2 cao.",
+                        "cường độ ánh sáng yếu, nhiệt độ thấp, nồng độ CO2 và O2 cao.",
+                        "cường độ ánh sáng yếu, nhiệt độ cao, nồng độ CO2 cao và O2 thấp."
+                    ],
+                    correctIndex: 1
+                },
+                {
+                    id: 60,
+                    type: "mcq",
+                    question: "Trong con đường C4, chất nhận CO2 đầu tiên là",
+                    options: ["PEP (3C).", "PGA (3C).", "G3P.", "RuBP (5C)"],
+                    correctIndex: 0
+                },
+                {
+                    id: 61,
+                    type: "mcq",
+                    question: "Trong con đường C4, sản phẩm cố định CO2 đầu tiên là",
+                    options: ["OAA (4C).", "PGA", "MA (4C).", "RuBP"],
+                    correctIndex: 0
+                },
+                {
+                    id: 62,
+                    type: "mcq",
+                    question: "Con đường cố định CO2 của thực vật C3 và C4 đều có",
+                    options: ["có chu trình Calvin.", "diễn ra trên cùng 1 loại tế bào.", "có chất nhận CO2 đầu tiên giống nhau.", "sản phẩm cố định CO2 đầu tiên giống nhau."],
+                    correctIndex: 0
+                },
+                {
+                    id: 63,
+                    type: "mcq",
+                    question: "Trong con đường C4, chu trình Calvin diễn ra ở:",
+                    options: ["tế bào biểu bì vỏ.", "tế bào mô giậu.", "tế bào thịt lá (nhu mô).", "Tế bào bao bó mạch"],
+                    correctIndex: 3
+                },
+                {
+                    id: 64,
+                    type: "mcq",
+                    question: "Những cây thuộc nhóm thực vật CAM là",
+                    options: ["dứa, ngô, mía, thanh long.", "ngô, mía, cỏ lồng vực.", "dứa, xương rồng, thanh long.", "lúa, khoai, sắn, đậu."],
+                    correctIndex: 2
+                },
+                {
+                    id: 65,
+                    type: "mcq",
+                    question: "Ở thực vật CAM, khí khổng hoạt động như thế nào?",
+                    options: ["đóng vào ban ngày và mở vào ban đêm.", "chỉ mở khí khổng khi hoàng hôn.", "chỉ đóng khí khổng vào giữa trưa.", "đóng vào ban đêm và mở vào ban ngày."],
+                    correctIndex: 0
+                },
+                {
+                    id: 66,
+                    type: "mcq",
+                    question: "Sự hoạt động của khí khổng ở thực vật CAM có ý nghĩa chủ yếu là để",
+                    options: ["tăng cường độ quang hợp.", "hạn chế sự mất nước.", "tăng cường sự hấp thụ nước.", "tăng lượng CO2 vào lá."],
+                    correctIndex: 1
+                },
+                {
+                    id: 67,
+                    type: "mcq",
+                    question: "Quang hợp xảy ra ở miền ánh sáng",
+                    options: ["Cam và đỏ.", "Xanh tím, cam.", "Đỏ, lục.", "Xanh tím, đỏ."],
+                    correctIndex: 3
+                },
+                {
+                    id: 68,
+                    type: "mcq",
+                    question: "Ánh sáng đỏ kích thích tổng hợp chất nào sau đây?",
+                    options: ["carbohydrate.", "hormone.", "lipid.", "DNA"],
+                    correctIndex: 0
+                },
+                {
+                    id: 69,
+                    type: "mcq",
+                    question: "Nếu cùng một cường độ chiếu sáng thì hiệu quả quang hợp của ánh sáng đỏ và xanh tím như thế nào?",
+                    options: ["đỏ > xanh tím.", "đỏ < xanh tím.", "đỏ = xanh tím.", "đỏ xanh tím."],
+                    correctIndex: 0
+                },
+                {
+                    id: 70,
+                    type: "mcq",
+                    question: "Sinh vật có thể tồn tại, sinh trưởng, phát triển và thích nghi với môi trường sống nhờ có quá trình nào sau đây?",
+                    options: ["Chuyển hóa năng lượng và sinh sản.", "Chuyển hóa năng lượng.", "Trao đổi chất và chuyển hóa năng lượng.", "Trao đổi chất và cảm ứng."],
+                    correctIndex: 2
+                },
+                {
+                    id: 71,
+                    type: "mcq",
+                    question: "Các dấu hiệu nào dưới đây đặc trưng của quá trình trao đổi chất và chuyển hóa năng lượng ở sinh vật?\n(1) Giao phối và sinh sản tạo ra cá thể mới.\n(2) Đào thải các chất.\n(3) Biến đổi các chất và chuyển hóa năng lượng.\n(4) Điều hòa hoạt động sống.\n(5) Thu nhận các chất từ môi trường và vận chuyển các chất.",
+                    options: ["1, 2, 3, 4", "1, 2, 4, 5", "1, 2, 3, 5", "2, 3, 4, 5"],
+                    correctIndex: 3
+                },
+                {
+                    id: 72,
+                    type: "mcq",
+                    question: "Tự dưỡng là phương thức sinh vật",
+                    options: [
+                        "tự tổng hợp được chất hữu cơ từ các chất vô cơ nhờ năng lượng ánh sáng hoặc năng lượng hóa học.",
+                        "lấy chất hữu cơ từ cơ thể sinh vật khác để làm nguồn dinh dưỡng và năng lượng cho cơ thể.",
+                        "tổng hợp chất vô cơ từ các chất hữu cơ có sẵn trong môi trường sống.",
+                        "phân giải hoàn toàn các chất thải hữu cơ thành các chất vô cơ đơn giản."
+                    ],
+                    correctIndex: 0
+                },
+                {
+                    id: 73,
+                    type: "mcq",
+                    question: "Đại diện nào dưới đây là sinh vật tự dưỡng sử dụng năng lượng ánh sáng và CO2 làm nguồn carbon để tổng hợp chất hữu cơ ?",
+                    options: ["Vi khuẩn E.coli.", "Con ngựa.", "Vi khuẩn lam.", "Trùng đế giày."],
+                    correctIndex: 2
+                },
+                {
+                    id: 74,
+                    type: "mcq",
+                    question: "Ví dụ về dấu hiệu biến đổi các chất và chuyển hoá năng lượng ở thực vật là gì?",
+                    options: ["Hấp thụ nước ở rễ nhờ tế bào lông hút.", "Thải khí Oxygen qua khí khổng trên lá cây.", "Chuyển hoá quang năng thành hoá năng.", "Vận chuyển Sucrose nhờ dòng mạch rây."],
+                    correctIndex: 2
+                },
+                {
+                    id: 75,
+                    type: "mcq",
+                    question: "Nguyên nhân chính giúp dòng mạch gỗ có thể vận chuyển nước từ rễ lên đến các lá ở trên cao là",
+                    options: ["lực hút do thoát hơi nước ở lá.", "lực co bóp của thành mạch gỗ.", "sự chênh lệch chất hữu cơ giữa rễ và lá.", "năng lượng ATP do tế bào mạch gỗ cung cấp."],
+                    correctIndex: 0
+                },
+                {
+                    id: 76,
+                    type: "mcq",
+                    question: "Cấu tạo các hợp chất hữu cơ, cấu tạo diệp lục và điều tiết độ mở khí khổng lần lượt là vai trò của",
+                    options: [
+                        "Nitrogen (N), Magnesium (Mg) và Potassium (K).",
+                        "Phosphorus (P), Sulfur (S), Chlorine (Cl).",
+                        "Manganese (Mn), Nitrogen (N), Chlorine (Cl).",
+                        "Potassium (K), Sulfur (S), Phosphorus (P)."
+                    ],
+                    correctIndex: 0
+                },
+                {
+                    id: 77,
+                    type: "mcq",
+                    question: "Trong tự nhiên, các nguồn cung cấp nitrogen chủ yếu cho cây trồng bao gồm",
+                    options: [
+                        "nguồn nitrogen trong khí quyển và nguồn nitrogen trong đất.",
+                        "nguồn nitrogen trong đá vôi và nguồn nitrogen trong nước biển.",
+                        "nguồn nitrogen do lá cây tự tổng hợp từ ánh sáng mặt trời.",
+                        "nguồn nitrogen trong các loại khoáng kim loại nặng."
+                    ],
+                    correctIndex: 0
+                },
+                {
+                    id: 78,
+                    type: "mcq",
+                    question: "Hai dạng Nitrogen khoáng mà hệ rễ cây có thể hấp thụ trực tiếp từ đất là",
+                    options: ["N2 và NO2", "NH4+ và NO3-", "N2 và NO3-", "NO2 và NH4+"],
+                    correctIndex: 1
+                },
+                {
+                    id: 79,
+                    type: "mcq",
+                    question: "Nguyên nhân nào sau đây làm tế bào lông hút luôn có nồng độ chất tan cao hơn (ưu trương) so với dung dịch đất?\n(1) Rễ hấp thụ các ion khoáng từ đất và tích lũy các chất tan từ quá trình chuyển hóa vật chất.\n(2) Thoát hơi nước ở lá làm giảm lượng nước ở tế bào lông hút.\n(3) Rễ hấp thụ nước và tích lũy nước từ quá trình chuyển hóa vật chất.\n(4) Rễ tiết các chất làm phân giải các chất tan trong dung dịch đất.",
+                    options: ["2, 3", "2, 4", "1, 2", "1, 3"],
+                    correctIndex: 2
+                },
+                {
+                    id: 80,
+                    type: "mcq",
+                    question: "Để trồng cây trên vùng đất cát ven biển thường xuyên bị xâm nhập mặn, người ta nên chọn giống có đặc điểm",
+                    options: ["áp suất thẩm thấu của tế bào rễ rất cao.", "khả năng thoát hơi nước ở lá cực mạnh.", "diện tích lá thật lớn và mỏng.", "hệ thống khí khổng luôn luôn mở rộng."],
+                    correctIndex: 0
+                },
+                {
+                    id: 81,
+                    type: "mcq",
+                    question: "Biện pháp nào sau đây giúp cây trồng tăng khả năng chống chịu hạn khi gặp thời tiết nắng nóng kéo dài?",
+                    options: [
+                        "Bón tăng cường phân Nitrogen kích thích ra lá.",
+                        "Phun chất kích thích đóng khí khổng chủ động (ABA).",
+                        "Ngắt bỏ toàn bộ hệ thống rễ cọc của cây.",
+                        "Tưới nước liên tục vào giữa trưa nắng ngắt."
+                    ],
+                    correctIndex: 1
+                },
+                {
+                    id: 82,
+                    type: "mcq",
+                    question: "Quang hợp ở thực vật là quá trình sử dụng năng lượng ánh sáng Mặt Trời để",
+                    options: [
+                        "tổng hợp chất hữu cơ từ CO2 và H2O, đồng thời giải phóng O2.",
+                        "phân giải chất hữu cơ thành CO2 và H2O, đồng thời tích lũy ATP.",
+                        "hấp thụ O2 và giải phóng CO2 ra môi trường ngoài.",
+                        "biến đổi các chất dinh dưỡng khoáng thành chất hữu cơ tích lũy ở rễ."
+                    ],
+                    correctIndex: 0
+                },
+                {
+                    id: 83,
+                    type: "mcq",
+                    question: "Quang hợp đóng vai trò quyết định đối với thực vật vì tạo ra",
+                    options: ["nguồn chất hữu cơ của cây.", "lượng CO2 dồi dào.", "các chất vô cơ đơn giản.", "nhiệt năng giữ ấm cho cây."],
+                    correctIndex: 0
+                },
+                {
+                    id: 84,
+                    type: "mcq",
+                    question: "Cho các chu trình sau:\n(1) Chu trình tan.\n(2) Chu trình C3.\n(3) Chu trình Kreb.\n(4) Chu trình CAM.\n(5) Chu trình C4.\n(6) Chu trình tiềm tan.\nCác con đường đồng hoá carbon trong quang hợp là",
+                    options: ["(1), (3), (4).", "(2), (3), (5).", "(1), (2), (5).", "(2), (4), (5)."],
+                    correctIndex: 3
+                },
+                {
+                    id: 85,
+                    type: "mcq",
+                    question: "Trong cây, đường glucose từ quang hợp được dùng để tạo cellulose và tinh bột. Vai trò của hai chất này lần lượt là gì?",
+                    options: [
+                        "Cellulose giúp lá không mất nước; tinh bột di chuyển trong mạch rây.",
+                        "Cellulose cấu tạo thành tế bào; tinh bột là chất dự trữ không tan trong nước.",
+                        "Cellulose giúp lá bắt ánh sáng; tinh bột giải phóng năng lượng nhanh hơn đường.",
+                        "Cellulose dự trữ năng lượng ban đêm; tinh bột chống độc cho tế bào."
+                    ],
+                    correctIndex: 1
+                },
+                {
+                    id: 86,
+                    type: "mcq",
+                    question: "Vì sao trong thực tiễn trồng trọt, người ta thường trồng xen canh cây ưa sáng và cây ưa bóng?",
+                    options: [
+                        "Để cây ưa sáng cung cấp chất dinh dưỡng trực tiếp cho cây ưa bóng.",
+                        "Để tận dụng tối đa không gian và nguồn ánh sáng ở các tầng khác nhau, tối ưu hóa hiệu suất quang hợp toàn diện tích.",
+                        "Để cây ưa bóng thu hút sâu bệnh thay cho cây ưa sáng.",
+                        "Để giảm bớt lượng nước tưới cần thiết cho cả hai loại cây."
+                    ],
+                    correctIndex: 1
+                },
+                {
+                    id: 87,
+                    type: "mcq",
+                    question: "Điểm giống nhau chủ yếu giữa thực vật C3 và C4 là",
+                    options: ["đều có quá trình hô hấp sáng rất mạnh.", "đều tạo ra sản phẩm đầu tiên là OAA.", "đều diễn ra quang hợp vào ban ngày.", "đều chỉ sử dụng 1 loại tế bào quang hợp."],
+                    correctIndex: 2
+                }
+            ],
+            tfQuestions: [
+                {
+                    id: 101,
+                    type: "tf",
+                    question: "Khi nói về quá trình quang hợp ở nhóm thực vật C3:",
+                    statements: [
+                        { text: "Pha sáng diễn ra tại thylakoid của lục lạp.", correct: true },
+                        { text: "O2 được giải phóng trong quang hợp có nguồn gốc từ khí CO2.", correct: false },
+                        { text: "Pha tối (chu trình Calvin) sử dụng ATP và NADPH được tạo ra từ pha sáng.", correct: true },
+                        { text: "Sản phẩm cố định CO2 đầu tiên của chu trình Calvin là hợp chất 3-PGA.", correct: true }
+                    ]
+                },
+                {
+                    id: 102,
+                    type: "tf",
+                    question: "Khi nói về sự hút nước và khoáng ở rễ cây:",
+                    statements: [
+                        { text: "Nước được hấp thụ vào tế bào lông hút theo cơ chế chủ động.", correct: false },
+                        { text: "Các ion khoáng có thể được hấp thụ theo cơ chế thụ động hoặc chủ động.", correct: true },
+                        { text: "Môi trường đất úng nước kéo dài làm cho lông hút bị gãy và tiêu biến.", correct: true },
+                        { text: "Nồng độ dịch tế bào lông hút luôn thấp hơn nồng độ dung dịch đất.", correct: false }
+                    ]
+                }
+            ]
+        };
+
+        let currentActiveQuiz = null;
+        let quizHistory = [];
+        let parsedQuestionsDraft = [];
+        let isTeacherAuthed = false;
+
+        // Student Quiz Session State
+        let currentQuizMode = null; // 'mcq' or 'tf'
+        let currentQuestionsList = [];
+        let currentQuestionIndex = 0;
+        let studentAnswers = {}; // { questionId: answerValue }
+
+        // Audio state
+        let bgmAudioEl = null;
+        let isBgmPlaying = false;
+
+        window.onload = function() {
+            bgmAudioEl = document.getElementById("bgmAudio");
+            initData();
+            updateUIState();
+            setupAudioEventListeners();
+        };
+
+        function initData() {
+            // Always set updated 90+ question set as active quiz
+            currentActiveQuiz = sampleQuizData;
+            localStorage.setItem(STORAGE_KEY_CURRENT_QUIZ, JSON.stringify(sampleQuizData));
+
+            const savedHistory = localStorage.getItem(STORAGE_KEY_HISTORY);
+            if (savedHistory) {
+                try {
+                    quizHistory = JSON.parse(savedHistory);
+                    if (!quizHistory.some(q => q.id === sampleQuizData.id)) {
+                        quizHistory.unshift(sampleQuizData);
+                    }
+                } catch(e) {
+                    quizHistory = [sampleQuizData];
+                }
+            } else {
+                quizHistory = [sampleQuizData];
+                localStorage.setItem(STORAGE_KEY_HISTORY, JSON.stringify(quizHistory));
+            }
+
+            const savedBgm = localStorage.getItem(STORAGE_KEY_BGM);
+            if (savedBgm) {
+                bgmAudioEl.src = savedBgm;
+                document.getElementById("bgmTrackTitle").innerText = "Nhạc Giáo Viên";
+                document.getElementById("teacherBgmName").innerText = "Nhạc nền do Giáo viên tải lên";
+            } else {
+                bgmAudioEl.src = "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3";
+            }
+        }
+
+        function updateUIState() {
+            if (currentActiveQuiz) {
+                document.getElementById("activeTopicName").innerText = currentActiveQuiz.title || "Bộ Đề Sinh Học 11";
+                document.getElementById("mcqCountBadge").innerText = `${currentActiveQuiz.mcqQuestions ? currentActiveQuiz.mcqQuestions.length : 0} Câu hỏi`;
+                document.getElementById("tfCountBadge").innerText = `${currentActiveQuiz.tfQuestions ? currentActiveQuiz.tfQuestions.length : 0} Câu hỏi`;
+            }
+
+            document.getElementById("bankCount").innerText = quizHistory.length;
+        }
+
+        function switchRole(role) {
+            const studentView = document.getElementById("studentView");
+            const teacherView = document.getElementById("teacherView");
+            const btnStudent = document.getElementById("btnRoleStudent");
+            const btnTeacher = document.getElementById("btnRoleTeacher");
+
+            if (role === 'teacher') {
+                if (!isTeacherAuthed) {
+                    openTeacherAuthModal();
+                    return;
+                }
+                studentView.classList.add("hidden");
+                teacherView.classList.remove("hidden");
+
+                btnTeacher.className = "px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 bg-bioGreen-500 text-white shadow-sm";
+                btnStudent.className = "px-4 py-2 rounded-xl text-sm font-bold text-slate-600 hover:text-bioGreen-700 transition flex items-center gap-1.5";
+                
+                if (parsedQuestionsDraft.length === 0 && currentActiveQuiz) {
+                    parsedQuestionsDraft = [
+                        ...currentActiveQuiz.mcqQuestions,
+                        ...currentActiveQuiz.tfQuestions
+                    ];
+                    renderTeacherQuestionsPreview();
+                }
+                renderHistoryBank();
+            } else {
+                teacherView.classList.add("hidden");
+                studentView.classList.remove("hidden");
+
+                btnStudent.className = "px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-1.5 bg-bioGreen-500 text-white shadow-sm";
+                btnTeacher.className = "px-4 py-2 rounded-xl text-sm font-bold text-slate-600 hover:text-bioGreen-700 transition flex items-center gap-1.5";
+            }
+        }
+
+        function openTeacherAuthModal() {
+            if (isTeacherAuthed) {
+                switchRole('teacher');
+                return;
+            }
+            document.getElementById("teacherAuthModal").classList.remove("hidden");
+            document.getElementById("teacherPassInput").focus();
+        }
+
+        function closeTeacherAuthModal() {
+            document.getElementById("teacherAuthModal").classList.add("hidden");
+            document.getElementById("authErrorMsg").classList.add("hidden");
+            document.getElementById("teacherPassInput").value = "";
+        }
+
+        function handleTeacherLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById("teacherPassInput").value.trim();
+            if (pass === TEACHER_PASSWORD) {
+                isTeacherAuthed = true;
+                closeTeacherAuthModal();
+                showToast("🎉 Đăng nhập giáo viên thành công!", "🔑");
+                switchRole('teacher');
+            } else {
+                document.getElementById("authErrorMsg").classList.remove("hidden");
+            }
+        }
+
+        function handleWordFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            showToast("Đang đọc & phân tích file Word...", "⏳");
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const arrayBuffer = e.target.result;
+                mammoth.convertToHtml({ arrayBuffer: arrayBuffer }, { styleMap: ["u => u"] })
+                    .then(function(result) {
+                        const html = result.value;
+                        parseWordHTMLContent(html);
+                        showToast("Tải và phân tích tệp thành công!", "✅");
+                    })
+                    .catch(function(err) {
+                        console.error("Mammoth error:", err);
+                        showToast("Lỗi khi đọc file Word. Hãy đảm bảo định dạng .docx", "❌");
+                    });
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function parseWordHTMLContent(html) {
+            const div = document.createElement("div");
+            div.innerHTML = html;
+
+            const textLines = div.querySelectorAll("p, h1, h2, h3, li");
+            let rawItems = [];
+
+            textLines.forEach(el => {
+                const innerHTML = el.innerHTML.trim();
+                const textContent = el.textContent.trim();
+                if (textContent.length > 0) {
+                    rawItems.push({ html: innerHTML, text: textContent });
+                }
+            });
+
+            let newQuestions = [];
+            let currentQuestion = null;
+
+            rawItems.forEach(item => {
+                const text = item.text;
+
+                if (/^Câu\s*\d+[:\.]/i.test(text) || /^[0-9]+\.\s/i.test(text)) {
+                    if (currentQuestion) {
+                        newQuestions.push(currentQuestion);
+                    }
+
+                    const isTF = /Đúng\s*\/\s*Sai|Đúng\s*Sai/i.test(text);
+                    currentQuestion = {
+                        id: Date.now() + Math.random(),
+                        type: isTF ? "tf" : "mcq",
+                        question: text,
+                        options: [],
+                        correctIndex: 0,
+                        statements: []
+                    };
+                } else if (currentQuestion) {
+                    if (currentQuestion.type === "mcq") {
+                        if (/^[A-D][:\.]/i.test(text)) {
+                            const isUnderlined = item.html.includes("<u>") || item.html.includes("underline");
+                            currentQuestion.options.push(text);
+                            if (isUnderlined) {
+                                currentQuestion.correctIndex = currentQuestion.options.length - 1;
+                            }
+                        }
+                    } else if (currentQuestion.type === "tf") {
+                        if (/^[a-d][\)\:\.]/i.test(text)) {
+                            const isUnderlined = item.html.includes("<u>") || item.html.includes("underline");
+                            currentQuestion.statements.push({
+                                text: text,
+                                correct: isUnderlined
+                            });
+                        }
+                    }
+                }
+            });
+
+            if (currentQuestion) {
+                newQuestions.push(currentQuestion);
+            }
+
+            if (newQuestions.length > 0) {
+                parsedQuestionsDraft = newQuestions;
+            } else {
+                showToast("Không tìm thấy câu hỏi đúng cấu trúc trong file!", "⚠️");
+            }
+
+            renderTeacherQuestionsPreview();
+        }
+
+        function loadSampleBiologyQuiz() {
+            parsedQuestionsDraft = [
+                ...sampleQuizData.mcqQuestions,
+                ...sampleQuizData.tfQuestions
+            ];
+            document.getElementById("quizTitleInput").value = sampleQuizData.title;
+            document.getElementById("quizNoteInput").value = sampleQuizData.note;
+            renderTeacherQuestionsPreview();
+            showToast("Đã nạp bộ 90+ câu hỏi Sinh học 11 mẫu!", "🌱");
+        }
+
+        function renderTeacherQuestionsPreview() {
+            const container = document.getElementById("parsedQuestionsContainer");
+            document.getElementById("parsedCountBadge").innerText = `${parsedQuestionsDraft.length} câu`;
+
+            if (parsedQuestionsDraft.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 bg-white rounded-2xl border border-slate-200 text-slate-400 text-sm">
+                        Chưa có câu hỏi nào trong danh sách preview.
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = parsedQuestionsDraft.slice(0, 30).map((q, idx) => {
+                if (q.type === 'mcq') {
+                    return `
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 space-y-3 relative">
+                        <div class="flex justify-between items-start">
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800">
+                                Câu ${idx + 1} (Trắc nghiệm 4 đáp án)
+                            </span>
+                            <button onclick="removeDraftQuestion(${idx})" class="text-red-400 hover:text-red-600 text-xs font-bold">
+                                <i class="fa-solid fa-trash"></i> Xóa
+                            </button>
+                        </div>
+                        <input type="text" value="${q.question}" onchange="updateDraftText(${idx}, 'question', this.value)" class="w-full font-bold text-slate-800 border-b border-slate-200 pb-1 focus:outline-none focus:border-bioGreen-500">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm pt-2">
+                            ${(q.options || []).map((opt, oIdx) => `
+                                <div class="flex items-center gap-2 ${oIdx === q.correctIndex ? 'text-emerald-700 font-bold bg-emerald-50 p-2 rounded-lg' : 'text-slate-600 p-2'}">
+                                    <input type="radio" name="correct_${idx}" ${oIdx === q.correctIndex ? 'checked' : ''} onchange="updateDraftCorrectMCQ(${idx}, ${oIdx})">
+                                    <span class="truncate">${opt}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>`;
+                } else {
+                    return `
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 space-y-3 relative">
+                        <div class="flex justify-between items-start">
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-sky-100 text-sky-800">
+                                Câu ${idx + 1} (Trắc nghiệm Đúng / Sai)
+                            </span>
+                            <button onclick="removeDraftQuestion(${idx})" class="text-red-400 hover:text-red-600 text-xs font-bold">
+                                <i class="fa-solid fa-trash"></i> Xóa
+                            </button>
+                        </div>
+                        <input type="text" value="${q.question}" onchange="updateDraftText(${idx}, 'question', this.value)" class="w-full font-bold text-slate-800 border-b border-slate-200 pb-1 focus:outline-none focus:border-sky-500">
+                        <div class="space-y-2 pt-2">
+                            ${(q.statements || []).map((st, sIdx) => `
+                                <div class="flex items-center justify-between bg-slate-50 p-2 rounded-xl text-sm">
+                                    <span class="text-slate-700 font-medium">${st.text}</span>
+                                    <div class="flex items-center gap-2">
+                                        <button onclick="toggleDraftTF(${idx}, ${sIdx}, true)" class="px-3 py-1 rounded-lg text-xs font-bold ${st.correct ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-600'}">Đúng</button>
+                                        <button onclick="toggleDraftTF(${idx}, ${sIdx}, false)" class="px-3 py-1 rounded-lg text-xs font-bold ${!st.correct ? 'bg-red-500 text-white' : 'bg-slate-200 text-slate-600'}">Sai</button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>`;
+                }
+            }).join('') + (parsedQuestionsDraft.length > 30 ? `<p class="text-center text-xs text-slate-400 py-2">...đang hiển thị 30/${parsedQuestionsDraft.length} câu. Tất cả câu sẽ được lưu khi bấm Lưu Đề.</p>` : '');
+        }
+
+        function removeDraftQuestion(index) {
+            parsedQuestionsDraft.splice(index, 1);
+            renderTeacherQuestionsPreview();
+        }
+
+        function updateDraftText(qIdx, field, val) {
+            parsedQuestionsDraft[qIdx][field] = val;
+        }
+
+        function updateDraftCorrectMCQ(qIdx, optionIdx) {
+            parsedQuestionsDraft[qIdx].correctIndex = optionIdx;
+            renderTeacherQuestionsPreview();
+        }
+
+        function toggleDraftTF(qIdx, statementIdx, isTrue) {
+            parsedQuestionsDraft[qIdx].statements[statementIdx].correct = isTrue;
+            renderTeacherQuestionsPreview();
+        }
+
+        function saveCurrentQuizToBank() {
+            if (parsedQuestionsDraft.length === 0) {
+                showToast("Hãy nhập ít nhất 1 câu hỏi trước khi lưu!", "⚠️");
+                return;
+            }
+
+            const title = document.getElementById("quizTitleInput").value.trim() || "Bộ Đề Sinh Học 11";
+            const note = document.getElementById("quizNoteInput").value.trim() || "Luyện tập Sinh Học 11";
+
+            const mcqList = parsedQuestionsDraft.filter(q => q.type === 'mcq');
+            const tfList = parsedQuestionsDraft.filter(q => q.type === 'tf');
+
+            const quizObj = {
+                id: "quiz_" + Date.now(),
+                title: title,
+                note: note,
+                updatedAt: new Date().toLocaleString("vi-VN"),
+                mcqQuestions: mcqList,
+                tfQuestions: tfList
+            };
+
+            currentActiveQuiz = quizObj;
+            localStorage.setItem(STORAGE_KEY_CURRENT_QUIZ, JSON.stringify(quizObj));
+
+            quizHistory.unshift(quizObj);
+            localStorage.setItem(STORAGE_KEY_HISTORY, JSON.stringify(quizHistory));
+
+            updateUIState();
+            renderHistoryBank();
+            showToast("Đã lưu đề thi mới vào Kho Học Liệu và cập nhật cho HS!", "🎉");
+        }
+
+        function renderHistoryBank() {
+            const container = document.getElementById("historyBankContainer");
+            if (quizHistory.length === 0) {
+                container.innerHTML = `<p class="text-sm text-slate-400 italic">Chưa có đề thi nào trong kho lưu trữ.</p>`;
+                return;
+            }
+
+            container.innerHTML = quizHistory.map((item) => `
+                <div class="p-4 rounded-2xl border ${item.id === currentActiveQuiz?.id ? 'border-bioGreen-500 bg-bioGreen-50/50' : 'border-slate-200 bg-white'} flex flex-wrap justify-between items-center gap-4">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <h5 class="font-bold text-slate-800 text-sm">${item.title}</h5>
+                            ${item.id === currentActiveQuiz?.id ? '<span class="text-[10px] bg-bioGreen-500 text-white font-bold px-2 py-0.5 rounded-full">Đang dùng</span>' : ''}
+                        </div>
+                        <p class="text-xs text-slate-500">${item.note || 'Không có ghi chú'} • Ngày lưu: ${item.updatedAt}</p>
+                        <div class="flex gap-2 text-[11px] font-bold text-slate-600">
+                            <span><i class="fa-solid fa-list-check text-emerald-600"></i> ${item.mcqQuestions?.length || 0} MCQ</span>
+                            <span>•</span>
+                            <span><i class="fa-solid fa-square-check text-sky-600"></i> ${item.tfQuestions?.length || 0} Đúng/Sai</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        ${item.id !== currentActiveQuiz?.id ? `
+                            <button onclick="setActiveQuizFromBank('${item.id}')" class="px-4 py-2 rounded-xl bg-bioGreen-500 hover:bg-bioGreen-600 text-white text-xs font-bold transition shadow-sm">
+                                Kích hoạt cho HS
+                            </button>
+                        ` : ''}
+                        <button onclick="deleteQuizFromHistory('${item.id}')" class="p-2 rounded-xl text-red-400 hover:text-red-600 hover:bg-red-50 text-xs font-bold transition">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function setActiveQuizFromBank(quizId) {
+            const selected = quizHistory.find(q => q.id === quizId);
+            if (selected) {
+                currentActiveQuiz = selected;
+                localStorage.setItem(STORAGE_KEY_CURRENT_QUIZ, JSON.stringify(selected));
+                updateUIState();
+                renderHistoryBank();
+                showToast(`Đã chuyển đề chính thành: "${selected.title}"`, "✨");
+            }
+        }
+
+        function deleteQuizFromHistory(quizId) {
+            quizHistory = quizHistory.filter(q => q.id !== quizId);
+            localStorage.setItem(STORAGE_KEY_HISTORY, JSON.stringify(quizHistory));
+            renderHistoryBank();
+            showToast("Đã xóa bộ đề khỏi kho học liệu", "🗑️");
+        }
+
+        function switchTeacherTab(tab) {
+            const uploadTab = document.getElementById("teacherTabUpload");
+            const historyTab = document.getElementById("teacherTabHistory");
+            const musicTab = document.getElementById("teacherTabMusic");
+
+            const btnUpload = document.getElementById("tabBtnUpload");
+            const btnHistory = document.getElementById("tabBtnHistory");
+            const btnMusic = document.getElementById("tabBtnMusic");
+
+            [uploadTab, historyTab, musicTab].forEach(el => el.classList.add("hidden"));
+            [btnUpload, btnHistory, btnMusic].forEach(btn => btn.className = "px-5 py-3 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 transition flex items-center gap-2");
+
+            if (tab === 'upload') {
+                uploadTab.classList.remove("hidden");
+                btnUpload.className = "px-5 py-3 font-bold text-sm border-b-2 border-bioGreen-500 text-bioGreen-700 transition flex items-center gap-2";
+            } else if (tab === 'history') {
+                historyTab.classList.remove("hidden");
+                btnHistory.className = "px-5 py-3 font-bold text-sm border-b-2 border-bioGreen-500 text-bioGreen-700 transition flex items-center gap-2";
+            } else if (tab === 'music') {
+                musicTab.classList.remove("hidden");
+                btnMusic.className = "px-5 py-3 font-bold text-sm border-b-2 border-bioGreen-500 text-bioGreen-700 transition flex items-center gap-2";
+            }
+        }
+
+        function handleMusicUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const audioData = evt.target.result;
+                localStorage.setItem(STORAGE_KEY_BGM, audioData);
+                bgmAudioEl.src = audioData;
+                document.getElementById("bgmTrackTitle").innerText = file.name;
+                document.getElementById("teacherBgmName").innerText = file.name;
+                showToast("Đã lưu nhạc nền mới của Giáo viên!", "🎵");
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function previewTeacherBgm() {
+            toggleBGM();
+        }
+
+        function removeCustomBgm() {
+            localStorage.removeItem(STORAGE_KEY_BGM);
+            bgmAudioEl.src = "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3";
+            document.getElementById("bgmTrackTitle").innerText = "Nhạc thư giãn";
+            document.getElementById("teacherBgmName").innerText = "Nhạc mặc định hệ thống";
+            showToast("Đã khôi phục nhạc mặc định", "🔄");
+        }
+
+        function toggleBGM() {
+            if (!bgmAudioEl.src) return;
+            if (isBgmPlaying) {
+                bgmAudioEl.pause();
+                isBgmPlaying = false;
+                document.getElementById("bgmIcon").className = "fa-solid fa-music text-xs";
+                document.getElementById("quizBgmText").innerText = "Bật Nhạc Nền";
+            } else {
+                bgmAudioEl.play().then(() => {
+                    isBgmPlaying = true;
+                    document.getElementById("bgmIcon").className = "fa-solid fa-pause text-xs";
+                    document.getElementById("quizBgmText").innerText = "Tắt Nhạc Nền";
+                }).catch(err => {
+                    console.log("Audio play prevented:", err);
+                });
+            }
+        }
+
+        function setVolume(val) {
+            bgmAudioEl.volume = parseFloat(val);
+        }
+
+        function setupAudioEventListeners() {
+            document.getElementById("audioPlayerContainer").classList.remove("hidden");
+        }
+
+        function startQuiz(mode) {
+            currentQuizMode = mode;
+            studentAnswers = {};
+            currentQuestionIndex = 0;
+
+            if (mode === 'mcq') {
+                currentQuestionsList = currentActiveQuiz.mcqQuestions || [];
+                document.getElementById("quizTypeLabel").innerText = "Trắc nghiệm 4 lựa chọn";
+                document.getElementById("quizTypeLabel").className = "text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800";
+            } else {
+                currentQuestionsList = currentActiveQuiz.tfQuestions || [];
+                document.getElementById("quizTypeLabel").innerText = "Trắc nghiệm Đúng / Sai";
+                document.getElementById("quizTypeLabel").className = "text-xs font-bold px-3 py-1 rounded-full bg-sky-100 text-sky-800";
+            }
+
+            if (currentQuestionsList.length === 0) {
+                showToast("Chưa có câu hỏi cho phần này trong đề thi hiện tại!", "⚠️");
+                return;
+            }
+
+            document.getElementById("quizSelectionScreen").classList.add("hidden");
+            document.getElementById("quizActiveScreen").classList.remove("hidden");
+            document.getElementById("quizResultScreen").classList.add("hidden");
+
+            if (!isBgmPlaying) {
+                toggleBGM();
+            }
+
+            renderCurrentQuestion();
+        }
+
+        function renderCurrentQuestion() {
+            const container = document.getElementById("questionContainer");
+            const q = currentQuestionsList[currentQuestionIndex];
+            const total = currentQuestionsList.length;
+
+            document.getElementById("questionProgress").innerText = `Câu ${currentQuestionIndex + 1} / ${total}`;
+
+            document.getElementById("btnPrevQuestion").disabled = (currentQuestionIndex === 0);
+            if (currentQuestionIndex === total - 1) {
+                document.getElementById("btnNextQuestion").classList.add("hidden");
+                document.getElementById("btnSubmitQuiz").classList.remove("hidden");
+            } else {
+                document.getElementById("btnNextQuestion").classList.remove("hidden");
+                document.getElementById("btnSubmitQuiz").classList.add("hidden");
+            }
+
+            if (currentQuizMode === 'mcq') {
+                const selectedOpt = studentAnswers[q.id];
+                container.innerHTML = `
+                    <div class="space-y-4">
+                        <h3 class="text-lg md:text-xl font-bold font-title text-slate-800 leading-snug">
+                            <span class="text-bioGreen-600">Câu ${currentQuestionIndex + 1}:</span> ${q.question}
+                        </h3>
+                        <div class="grid grid-cols-1 gap-3 pt-2">
+                            ${(q.options || []).map((opt, idx) => `
+                                <div onclick="selectMcqOption(${q.id}, ${idx})" class="p-4 rounded-2xl border-2 transition cursor-pointer flex items-center gap-3 ${selectedOpt === idx ? 'border-bioGreen-500 bg-bioGreen-50 text-bioGreen-900 font-bold shadow-sm' : 'border-slate-200 hover:border-bioGreen-300 text-slate-700'}">
+                                    <div class="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs ${selectedOpt === idx ? 'bg-bioGreen-500 text-white' : 'bg-slate-100 text-slate-600'}">
+                                        ${String.fromCharCode(65 + idx)}
+                                    </div>
+                                    <span class="text-sm md:text-base">${opt}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (currentQuizMode === 'tf') {
+                const userTfMap = studentAnswers[q.id] || {};
+                container.innerHTML = `
+                    <div class="space-y-4">
+                        <h3 class="text-lg md:text-xl font-bold font-title text-slate-800 leading-snug">
+                            <span class="text-sky-600">Câu ${currentQuestionIndex + 1}:</span> ${q.question}
+                        </h3>
+                        <p class="text-xs text-slate-500 italic">Chọn Đúng hoặc Sai cho mỗi mệnh đề bên dưới:</p>
+                        <div class="space-y-3 pt-2">
+                            ${(q.statements || []).map((st, sIdx) => {
+                                const currentChoice = userTfMap[sIdx];
+                                return `
+                                <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                    <span class="text-sm md:text-base font-semibold text-slate-700">${st.text}</span>
+                                    <div class="flex items-center gap-2 self-end sm:self-auto">
+                                        <button onclick="selectTfChoice(${q.id}, ${sIdx}, true)" class="px-5 py-2 rounded-xl text-xs font-bold transition ${currentChoice === true ? 'bg-emerald-500 text-white shadow-md' : 'bg-white border border-slate-200 text-slate-600 hover:bg-emerald-50'}">
+                                            <i class="fa-solid fa-check mr-1"></i> Đúng
+                                        </button>
+                                        <button onclick="selectTfChoice(${q.id}, ${sIdx}, false)" class="px-5 py-2 rounded-xl text-xs font-bold transition ${currentChoice === false ? 'bg-red-500 text-white shadow-md' : 'bg-white border border-slate-200 text-slate-600 hover:bg-red-50'}">
+                                            <i class="fa-solid fa-xmark mr-1"></i> Sai
+                                        </button>
+                                    </div>
+                                </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function selectMcqOption(qId, optIdx) {
+            studentAnswers[qId] = optIdx;
+            renderCurrentQuestion();
+        }
+
+        function selectTfChoice(qId, statementIdx, choiceBool) {
+            if (!studentAnswers[qId]) {
+                studentAnswers[qId] = {};
+            }
+            studentAnswers[qId][statementIdx] = choiceBool;
+            renderCurrentQuestion();
+        }
+
+        function navigateQuestion(direction) {
+            const newIndex = currentQuestionIndex + direction;
+            if (newIndex >= 0 && newIndex < currentQuestionsList.length) {
+                currentQuestionIndex = newIndex;
+                renderCurrentQuestion();
+            }
+        }
+
+        function submitQuiz() {
+            let correctCount = 0;
+            const total = currentQuestionsList.length;
+
+            if (currentQuizMode === 'mcq') {
+                currentQuestionsList.forEach(q => {
+                    if (studentAnswers[q.id] === q.correctIndex) {
+                        correctCount++;
+                    }
+                });
+            } else if (currentQuizMode === 'tf') {
+                currentQuestionsList.forEach(q => {
+                    const userChoices = studentAnswers[q.id] || {};
+                    let allStatementsCorrect = true;
+                    (q.statements || []).forEach((st, sIdx) => {
+                        if (userChoices[sIdx] !== st.correct) {
+                            allStatementsCorrect = false;
+                        }
+                    });
+                    if (allStatementsCorrect) {
+                        correctCount++;
+                    }
+                });
+            }
+
+            const percentage = Math.round((correctCount / total) * 100);
+
+            document.getElementById("quizActiveScreen").classList.add("hidden");
+            document.getElementById("quizResultScreen").classList.remove("hidden");
+
+            document.getElementById("resultScore").innerText = `${correctCount} / ${total}`;
+            document.getElementById("resultPercentage").innerText = `${percentage}%`;
+
+            let feedbackText = "Cố gắng hơn nữa ở lần làm bài tiếp theo nhé!";
+            if (percentage >= 90) {
+                feedbackText = "🌟 Quá xuất sắc! Bạn là một thiên tài Sinh Học 11 thực sự!";
+            } else if (percentage >= 70) {
+                feedbackText = "🌱 Rất tốt! Bạn nắm vững hầu hết kiến thức bài học rồi đó!";
+            } else if (percentage >= 50) {
+                feedbackText = "👍 Khá lắm! Hãy ôn lại một vài ý để đạt điểm tối đa nhé!";
+            }
+            document.getElementById("resultFeedback").innerText = feedbackText;
+
+            try {
+                const jsConfetti = new JSConfetti();
+                jsConfetti.addConfetti({
+                    emojis: ['🌱', '🧬', '🌸', '✨', '🏆'],
+                    confettiNumber: 60,
+                });
+            } catch(e) {}
+        }
+
+        function reviewAnswers() {
+            const container = document.getElementById("answerReviewContainer");
+            const list = document.getElementById("answerReviewList");
+            container.classList.remove("hidden");
+
+            list.innerHTML = currentQuestionsList.map((q, idx) => {
+                if (currentQuizMode === 'mcq') {
+                    const userAns = studentAnswers[q.id];
+                    const isCorrect = userAns === q.correctIndex;
+                    return `
+                        <div class="bg-white p-5 rounded-2xl border ${isCorrect ? 'border-emerald-300 bg-emerald-50/30' : 'border-red-200 bg-red-50/20'} space-y-2">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold px-2.5 py-1 rounded-md ${isCorrect ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'}">
+                                    ${isCorrect ? 'Chính xác' : 'Chưa đúng'}
+                                </span>
+                                <h5 class="font-bold text-slate-800 text-sm">Câu ${idx + 1}: ${q.question}</h5>
+                            </div>
+                            <div class="text-xs text-slate-600 pl-4 space-y-1">
+                                <p>• Bạn chọn: <span class="font-bold ${isCorrect ? 'text-emerald-700' : 'text-red-600'}">${userAns !== undefined ? q.options[userAns] : 'Chưa chọn'}</span></p>
+                                <p>• Đáp án đúng: <span class="font-bold text-emerald-700">${q.options[q.correctIndex]}</span></p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    const userChoices = studentAnswers[q.id] || {};
+                    return `
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 space-y-3">
+                            <h5 class="font-bold text-slate-800 text-sm">Câu ${idx + 1}: ${q.question}</h5>
+                            <div class="space-y-2 text-xs">
+                                ${(q.statements || []).map((st, sIdx) => {
+                                    const uChoice = userChoices[sIdx];
+                                    const stCorrect = uChoice === st.correct;
+                                    return `
+                                        <div class="p-2 rounded-xl flex justify-between items-center ${stCorrect ? 'bg-emerald-50 text-emerald-900' : 'bg-red-50 text-red-900'}">
+                                            <span>${st.text}</span>
+                                            <span class="font-bold">Đúng thực tế: ${st.correct ? 'ĐÚNG' : 'SAI'} | Bạn chọn: ${uChoice === true ? 'ĐÚNG' : uChoice === false ? 'SAI' : 'Chưa chọn'}</span>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            }).join('');
+        }
+
+        function exitQuiz() {
+            document.getElementById("quizSelectionScreen").classList.remove("hidden");
+            document.getElementById("quizActiveScreen").classList.add("hidden");
+            document.getElementById("quizResultScreen").classList.add("hidden");
+            document.getElementById("answerReviewContainer").classList.add("hidden");
+        }
+
+        function showToast(msg, icon = "✅") {
+            const toast = document.getElementById("toast");
+            document.getElementById("toastMessage").innerText = msg;
+            document.getElementById("toastIcon").innerText = icon;
+
+            toast.classList.remove("translate-y-20", "opacity-0");
+            setTimeout(() => {
+                toast.classList.add("translate-y-20", "opacity-0");
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
